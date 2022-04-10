@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav
+    <!-- <nav
       class="navbar header has-shadow is-primary"
       role="navigation"
       aria-label="main navigation"
@@ -16,9 +16,9 @@
           <span />
         </div>
       </div>
-    </nav>
-
-    <section class="main-content columns">
+    </nav> -->
+    <Nuxt />
+    <!-- <section class="main-content columns">
       <aside class="column is-2 section">
         <p class="menu-label is-hidden-touch">General</p>
         <ul class="menu-list">
@@ -33,7 +33,7 @@
       <div class="container column is-10">
         <Nuxt />
       </div>
-    </section>
+    </section> -->
   </div>
 </template>
 
@@ -53,8 +53,22 @@ export default {
           icon: 'lightbulb',
           to: { name: 'inspire' },
         },
+        {
+          title: 'Main',
+          icon: 'home',
+          to: { name: 'main' },
+        },
       ],
     }
   },
 }
 </script>
+
+<style lang="css">
+body,
+html {
+  background-color: #e4d4bd;
+  height: 100%;
+  background-position: center;
+}
+</style>
