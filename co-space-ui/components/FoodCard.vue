@@ -1,15 +1,17 @@
 <template>
   <div class="column">
-    <div class="card">
-      <div class="card-content">
-        <div class="content has-text-centered">
-          <font-awesome-icon :icon="icon" size="10x" class="" />
-        </div>
-        <div>
-          <h1 class="title has-text-centered color-blue">{{ title }}</h1>
+    <a>
+      <div class="card" @click="changePage">
+        <div class="card-content">
+          <div class="content has-text-centered">
+            <font-awesome-icon :icon="icon" size="10x" class="" />
+          </div>
+          <div>
+            <h1 class="title has-text-centered color-blue">{{ title }}</h1>
+          </div>
         </div>
       </div>
-    </div>
+    </a>
   </div>
 </template>
 
@@ -24,6 +26,19 @@ export default {
     icon: {
       type: String,
       required: true,
+    },
+    toPage: {
+      type: String,
+      required: true,
+    },
+  },
+  methods: {
+    changePage() {
+      this.$buefy.notification.open(this.toPage)
+      this.$router.push({
+        name: this.toPage,
+        params: {},
+      })
     },
   },
 }
