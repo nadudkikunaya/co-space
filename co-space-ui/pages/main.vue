@@ -1,7 +1,7 @@
 <template>
   <section class="section is-medium">
     <div
-      class="columns is-variable is-2-mobile is-0-tablet is-8-desktop is-8-widescreen is-8-fuulhd"
+      class="columns is-variable is-2-mobile is-0-tablet is-5-desktop is-5-widescreen is-5-fuulhd"
     >
       <div class="column">
         <FoodCard title="Food/Beverage" icon="utensils">
@@ -16,7 +16,7 @@
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <FoodCard title="Rooms" icon="chalkboard-user">
+        <FoodCard title="Member" icon="user-large">
           Open source on <a href="https://github.com/buefy/buefy"> GitHub </a>
         </FoodCard>
       </div>
@@ -25,12 +25,7 @@
     <div
       class="columns is-variable is-2-mobile is-0-tablet is-8-desktop is-8-widescreen is-8-fuulhd"
     >
-      <div class="column">
-        <FoodCard title="Member" icon="user-large">
-          Open source on <a href="https://github.com/buefy/buefy"> GitHub </a>
-        </FoodCard>
-      </div>
-      <div class="column is-1"></div>
+      <div class="column is-2"></div>
       <div class="column">
         <FoodCard title="Report" icon="chart-pie">
           Open source on <a href="https://github.com/buefy/buefy"> GitHub </a>
@@ -42,6 +37,7 @@
           Open source on <a href="https://github.com/buefy/buefy"> GitHub </a>
         </FoodCard>
       </div>
+      <div class="column is-2"></div>
     </div>
   </section>
 </template>

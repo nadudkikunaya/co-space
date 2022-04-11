@@ -3,10 +3,10 @@
     <div class="card">
       <div class="card-content">
         <div class="content has-text-centered">
-          <font-awesome-icon :icon="icon" size="10x" />
+          <font-awesome-icon :icon="icon" size="10x" class="" />
         </div>
         <div>
-          <h1 class="title has-text-centered font-color">{{ title }}</h1>
+          <h1 class="title has-text-centered color-blue">{{ title }}</h1>
         </div>
       </div>
     </div>
@@ -30,7 +30,15 @@ export default {
 </script>
 
 <style scoped>
-.font-color {
+.color-blue {
   color: #70b6c2;
+}
+
+.color-grey {
+  color: #bababa;
+}
+
+.card:hover {
+  background: #dddddd;
 }
 </style>
