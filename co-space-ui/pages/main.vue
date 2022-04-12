@@ -7,7 +7,7 @@
         <MenuCard
           title="Food/Beverage"
           icon="utensils"
-          to-page="foodpage"
+          to-page="food"
         ></MenuCard>
       </div>
       <div class="column is-1"></div>
