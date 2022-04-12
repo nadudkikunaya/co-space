@@ -1,8 +1,7 @@
-//const router = require("./routes");
-const { pool, formatDate, client, myMoment } = require("./config");
+const router = require("./routes");
 const express = require("express");
 const app = express();
-//const { logger } = require("./middleware");
+const { logger } = require("./middleware");
 const cors = require("cors");
 
 const PORT = process.env.PORT || 8080;
@@ -10,21 +9,15 @@ const PORT = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-//app.use(logger);
+app.use(logger);
+
+app.use("/api", router);
 
 app.get("/", async (req, res) => {
-  const conn = await pool.getConnection();
-  await conn.beginTransaction();
-
-  sql = "SELECT * FROM members";
-  const [data] = await conn.query(sql);
-  res.send({
-    hello: "Hello World",
-    data: data,
+  return res.json({
+    connection: "success",
   });
 });
-
-//app.use("/api", router);
 
 app.listen(PORT, () => {
   console.log(`Mock API start on port ${PORT}`);

@@ -23,7 +23,7 @@
             <div class="card-content">
               <div class="content has-text-centered"></div>
               <div class="">
-                <h1 class="title has-text-centered color-blue">test</h1>
+                <b-table :data="productList" :columns="columns"></b-table>
               </div>
             </div>
           </div>
@@ -34,9 +34,52 @@
 </template>
 
 <script>
+import { axios } from '@/plugins/axios'
 export default {
-  name: 'foodPage',
+  name: 'FoodPage',
   components: {},
+  data() {
+    return {
+      productList: [],
+      columns: [
+        {
+          field: 'product_id',
+          label: 'ID',
+          width: '40',
+          numeric: true,
+        },
+        {
+          field: 'product_name',
+          label: 'Name',
+        },
+        {
+          field: 'product_type',
+          label: 'Type',
+        },
+        {
+          field: 'price',
+          label: 'Price',
+          centered: true,
+        },
+        {
+          field: 'quantity',
+          label: 'Qty',
+          width: '40',
+          numeric: true,
+        },
+      ],
+    }
+  },
+  async mounted() {
+    await this.getFoodList()
+  },
+  methods: {
+    async getFoodList() {
+      const response = await axios.get(`/foodlist`, {})
+      console.log(response.data.data)
+      this.productList = response.data.data
+    },
+  },
 }
 </script>
 
