@@ -1,18 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const food = require("./food");
-const member = require("./member");
-const krit = require("./krit");
-const chopang = require("./chopang");
-const book = require("./books")
+const foods = require("./foods");
+const members = require("./members");
+const books = require("./books")
 
-// test
-router.use(krit);
-router.use(chopang);
+// testapi
+// const krit = require("./testapi/krit");
+// const chopang = require("./testapi/chopang");
+// router.use(krit);
+// router.use(chopang);
 
 // production
-router.use(food);
-router.use(member);
-router.use(book);
+router.use(foods);
+router.use(members);
+router.use(books);
 
 module.exports = router;

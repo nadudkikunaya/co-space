@@ -4,7 +4,7 @@ const { pool, formatDate, client } = require("../config");
 
 // Get for only id after path
 router.get(
-    "/book/:id/", async (req, res) => {
+    "/books/:id/", async (req, res) => {
         // let {id, name} = req.params;
         let id = req.params.id;
         const conn = await pool.getConnection();

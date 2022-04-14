@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { pool, formatDate, client } = require("../config");
+const { pool, formatDate, client } = require("../../config");
 
 router.post("/books/:id", async (req, res) => {
   const conn = await pool.getConnection();

@@ -4,7 +4,7 @@ const { pool, formatDate, client } = require("../config");
 
 // Get for only id after path
 router.get(
-    "/member/:id/", async (req, res) => {
+    "/members_get/:id/", async (req, res) => {
         // let {id, name} = req.params;
         let id = req.params.id;
         const conn = await pool.getConnection();
@@ -36,7 +36,7 @@ router.get(
 
 // Get for both id and name (this is just experimental)
 router.get(
-    "/member/:id/:name", async (req, res) => {
+    "/members_get/:id/:name", async (req, res) => {
         // let {id, name} = req.params;
         let id = req.params.id;
         let name = req.params.name;
@@ -72,7 +72,40 @@ router.get(
 );
 
 
-// router.post
+// router.post adds a new entry to our database [(member_id), member_firstname, member_lastname, gender, (created_date)]
+router.post(
+    "/members_post/:mf:ml:g", async (req, res) => {
+        let {member_firstname, member_lastname, gender} = req.params;
+        const conn = await pool.getConnection();
+        await conn.beginTransaction();
+        try {
+            sql = `INSERT INTO \`library\`.\`members\` (\`member_firstname\`, \`member_lastname\`, \`gender\`)
+                    VALUES ('${member_firstname}', '${member_lastname}', '${gender}');`;    // member_id and created_will be added by the database automatically
+            const [query_result] = await conn.query(sql);
+
+            if (query_result.affectedRows == 1) {   // How to determine if the insert query is successful?
+                return res.json(
+                    {
+                        success: true,
+                    }
+                );
+            } else {
+                return res.json(
+                    {
+                        success: false,
+                    }
+                );
+            }
+            
+        } catch (err) {
+            console.log(err);
+            conn.rollback();
+            return res.status(400).json(err.toString());
+        } finally {
+            conn.release();
+        }
+    }
+);
 
 // router.put
 
