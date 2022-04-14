@@ -12,7 +12,7 @@
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard title="Books" icon="book" to-page="booksPage"></MenuCard>
+        <MenuCard title="Ayylmao" icon="book" to-page="booksPage"></MenuCard>
       </div>
       <div class="column is-1"></div>
       <div class="column">
