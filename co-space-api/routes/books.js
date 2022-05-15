@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { pool, formatDate, client } = require("./config");
+const { pool, formatDate, client } = require("../config");
 
 // Get for only id after path
 router.get("/books/:id/", async (req, res) => {
