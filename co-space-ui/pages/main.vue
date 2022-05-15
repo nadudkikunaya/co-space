@@ -1,7 +1,7 @@
 <template>
   <section class="section is-medium">
     <div
-      class="columns is-variable is-2-mobile is-0-tablet is-5-desktop is-5-widescreen is-5-fuulhd"
+      class="columns is-variable is-2-mobile is-0-tablet is-5-desktop is-5-widescreen is-5-fullhd"
     >
       <div class="column">
         <MenuCard

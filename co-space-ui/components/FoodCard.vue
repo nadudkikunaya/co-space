@@ -1,13 +1,16 @@
 <template>
   <div class="column">
     <a>
-      <div class="card" @click="changePage">
+      <div class="card">
         <div class="card-content">
-          <div class="content has-text-centered">
-            <font-awesome-icon :icon="icon" size="10x" class="" />
-          </div>
           <div>
-            <h1 class="title has-text-centered color-blue">{{ title }}</h1>
+            <b-image :src="img" ratio="1by1"></b-image>
+            <p class="has-text-centered">
+              {{ name }}
+            </p>
+            <p class="has-text-centered">
+              {{ price }}
+            </p>
           </div>
         </div>
       </div>
@@ -17,43 +20,26 @@
 
 <script>
 export default {
-  name: 'MenuCard',
+  name: 'FoodCard',
   props: {
-    title: {
+    id: {
+      type: Number,
+    },
+    name: {
       type: String,
       required: true,
     },
-    icon: {
-      type: String,
-      required: true,
+    price: {
+      type: Number,
+      require: true,
     },
-    toPage: {
+    img: {
       type: String,
-      required: true,
+      require: true,
     },
   },
-  methods: {
-    changePage() {
-      this.$buefy.notification.open(this.toPage)
-      this.$router.push({
-        name: this.toPage,
-        params: {},
-      })
-    },
-  },
+  methods: {},
 }
 </script>
 
-<style scoped>
-.color-blue {
-  color: #70b6c2;
-}
-
-.color-grey {
-  color: #bababa;
-}
-
-.card:hover {
-  background: #dddddd;
-}
-</style>
+<style scoped></style>

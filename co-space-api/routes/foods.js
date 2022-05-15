@@ -6,7 +6,7 @@ router.get("/foodlist", async (req, res) => {
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-    sql = `SELECT * FROM products WHERE product_type != 'books'`;
+    sql = `SELECT * FROM foods`;
     const [data] = await conn.query(sql);
 
     return res.json({
