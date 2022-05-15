@@ -1,2 +1,2 @@
 node_modules/
-./co-space-api/config.*
+*/config.js
