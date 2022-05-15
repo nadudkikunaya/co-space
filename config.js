@@ -1,5 +1,6 @@
 const mysql = require("mysql2/promise");
 const moment = require("moment-timezone");
+require("dotenv").config();
 
 // module.exports.pool = mysql.createPool({
 //   host: "db-project.cgh3x88llksm.ap-southeast-1.rds.amazonaws.com",
@@ -15,7 +16,7 @@ const moment = require("moment-timezone");
 module.exports.pool = mysql.createPool({
   host: "127.0.0.1",
   user: "root",
-  password: "",
+  password: process.env.password || "",
   database: "library",
   timezone: "Asia/Bangkok",
   waitForConnections: true,
