@@ -16,7 +16,7 @@ require("dotenv").config();
 module.exports.pool = mysql.createPool({
   host: "127.0.0.1",
   user: "root",
-  password: process.env.password || "test",
+  password: process.env.password || "",
   database: "library",
   timezone: "Asia/Bangkok",
   waitForConnections: true,
