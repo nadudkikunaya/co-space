@@ -15,7 +15,7 @@ const moment = require("moment-timezone");
 module.exports.pool = mysql.createPool({
   host: "127.0.0.1",
   user: "root",
-  password: "random test lmao",
+  password: "random test tttt",
   database: "library",
   timezone: "Asia/Bangkok",
   waitForConnections: true,
