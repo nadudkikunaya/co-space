@@ -14,9 +14,9 @@ require("dotenv").config();
 // });
 
 module.exports.pool = mysql.createPool({
-  host: "127.0.0.1",
-  user: "root",
-  password: process.env.password || "",
+  host: "db-project.cgh3x88llksm.ap-southeast-1.rds.amazonaws.com",
+  user: "admin",
+  password: "SQvSjKK5MH",
   database: "library",
   timezone: "Asia/Bangkok",
   waitForConnections: true,

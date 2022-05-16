@@ -24,7 +24,8 @@
               <div class="content has-text-centered">
                 <div class="columns">
                   <div class="column is-4">
-                    <input type="text" />
+                    <input type="text" @keydown="searchMember" />
+                    {{ memberId }}
                   </div>
                 </div>
                 <div class="columns">
@@ -60,7 +61,9 @@
                     v-if="4 * (row - 1) + (i - 1) <= productList.length - 1"
                     :name="productList[4 * (row - 1) + (i - 1)].food_name"
                     :img="productList[4 * (row - 1) + (i - 1)].food_image"
-                    :price="productList[4 * (row - 1) + (i - 1)].price"
+                    :price="
+                      parseInt(productList[4 * (row - 1) + (i - 1)].price)
+                    "
                   ></FoodCard>
                 </div>
                 <!-- <div
@@ -90,6 +93,7 @@ export default {
       selectedItem: [],
       selectedList: [],
       total_price: 0,
+      memberId: '',
     }
   },
   async mounted() {
@@ -147,6 +151,20 @@ export default {
       this.total_price = 0
       this.selectedItem = []
       this.selectedList = []
+    },
+
+    searchMember(e) {
+      if (e.code === 'Backspace') {
+        this.memberId = this.memberId.substring(0, this.memberId.length - 1)
+      }
+      if (
+        (e.keyCode >= 48 && e.keyCode <= 57) ||
+        (e.keyCode >= 65 && e.keyCode <= 90) ||
+        (e.keyCode >= 97 && e.keyCode <= 122)
+      ) {
+        console.log(e.key)
+        this.memberId += e.key
+      }
     },
   },
 }
