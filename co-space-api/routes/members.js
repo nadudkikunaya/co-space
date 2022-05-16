@@ -70,12 +70,12 @@ router.get("/members_get/:member_id/", async (req, res) => {
   try {
     sql = `SELECT *
                     FROM members
-                    WHERE member_id = ${member_id};`;
-    const [query_result] = await conn.query(sql);
+                    WHERE member_id = ${member_id} OR phone = '${member_id}' LIMIT 1;`;
+    const [[data]] = await conn.query(sql);
 
     return res.json({
       success: true,
-      data: query_result, // the varaible name "data" is the agreed upon name that the frontent part will understand
+      data: data, // the varaible name "data" is the agreed upon name that the frontent part will understand
     });
   } catch (err) {
     console.log(err);

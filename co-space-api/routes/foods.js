@@ -3,10 +3,11 @@ const router = express.Router();
 const { pool, formatDate, client } = require("../config");
 
 router.get("/foodlist", async (req, res) => {
+  type = req.query.type;
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-    sql = `SELECT * FROM foods`;
+    sql = `SELECT * FROM foods WHERE food_type = '${type}'`;
     const [data] = await conn.query(sql);
 
     return res.json({

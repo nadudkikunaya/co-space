@@ -12,28 +12,65 @@
 
                 <div v-for="item in selectedList" :key="item.food_id">
                   <SelectedFood
-                    @updateQuantity="updateQuantity"
                     :name="item.food_name"
                     :price="parseInt(item.price)"
                     :quantity="item.quantity"
+                    @updateQuantity="updateQuantity"
                   ></SelectedFood>
                 </div>
               </div>
             </div>
-            <div class="card-content">
-              <div class="content has-text-centered">
+            <div class="card-content bg-blue">
+              <div class="content">
                 <div class="columns">
-                  <div class="column is-4">
-                    <input type="text" @keydown="searchMember" />
-                    {{ memberId }}
+                  <div class="column is-12">
+                    <div class="columns">
+                      <div class="column is-8">
+                        <b-input
+                          v-model="memberId"
+                          size="is-small"
+                          rounded
+                        ></b-input>
+                      </div>
+                      <div class="column is-4">
+                        <p>{{ memberDetails.member_firstname }}</p>
+                      </div>
+                    </div>
+                    <div class="columns">
+                      <div class="column is-8">
+                        <div class="box">
+                          <p>ราคา : {{ realPrice }}</p>
+                          <p>ส่วนลด : {{ discount }}</p>
+                          <p>รวม : {{ total_price }}</p>
+                        </div>
+                      </div>
+                      <div class="column is-4">
+                        <b-button class="is-grey" @click="clear"
+                          >เคลียร์</b-button
+                        >
+                        <b-button class="is-purple" @click="createTransaction"
+                          >คิดเงิน</b-button
+                        >
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div class="columns">
-                  <div class="column is-4">total : {{ total_price }}</div>
-                  <div class="column is-4">
-                    <button>Buy</button>
-                    <button @click="clear">clear</button>
-                  </div>
+                  <!-- <div class="column is-4">
+                    <div class="columns">
+                      <div class="column">
+                        <p>{{ memberDetails.member_firstname }}</p>
+                      </div>
+                    </div>
+                    <div class="columns">
+                      <div class="column">
+                        <b-button class="is-grey" @click="clear"
+                          >เคลียร์</b-button
+                        >
+                        <b-button class="is-purple" @click="createTransaction"
+                          >คิดเงิน</b-button
+                        >
+                      </div>
+                    </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -43,6 +80,11 @@
         <div class="column is-9">
           <div class="card">
             <div class="card-content">
+              <b-tabs v-model="selectedTab">
+                <b-tab-item label="เครื่องดื่ม"></b-tab-item>
+                <b-tab-item label="ขนมขบเคี้ยว"></b-tab-item>
+                <b-tab-item label="เบเกอรี่"></b-tab-item>
+              </b-tabs>
               <div class="content has-text-centered"></div>
               <div
                 v-for="row in Math.ceil(productList.length / 4)"
@@ -90,25 +132,70 @@ export default {
   data() {
     return {
       productList: [],
-      selectedItem: [],
       selectedList: [],
       total_price: 0,
       memberId: '',
+      selectedTab: 0,
+      memberDetails: '',
+      discount: 0,
+      realPrice: 0,
     }
   },
+  watch: {
+    selectedTab(value) {
+      this.updateMenu(value)
+    },
+
+    memberId(value) {
+      setTimeout(() => {
+        if (value.length > 0 && value !== undefined && value !== null) {
+          this.getMemberDetails()
+        } else if (value === '') {
+          this.memberDetails = ''
+          this.updateTotal()
+        }
+      }, 1000)
+    },
+  },
   async mounted() {
-    await this.getFoodList()
+    await this.getFoodList('beverage')
   },
   methods: {
-    async getFoodList() {
-      const response = await axios.get(`/foodlist`, {})
-      console.log(response.data.data)
+    async getFoodList(type) {
+      const response = await axios.get(`/foodlist?type=${type}`, {})
       this.productList = response.data.data
     },
+
+    async getMemberDetails() {
+      const response = await axios.get(`/members_get/${this.memberId}`, {})
+      this.memberDetails = response.data.data || ''
+      if (response.data.success) this.updateTotal()
+    },
+
+    async createTransaction() {
+      const response = await axios.post(`/sale_foods`, {
+        selectedList: this.selectedList,
+        total: this.realPrice,
+        staff_id: 1,
+        member_id: this.memberDetails?.member_id || null,
+        discount: this.discount,
+      })
+      if (response.data.success) {
+        this.success()
+        this.clear()
+      } else {
+        this.danger()
+      }
+    },
     addToSelectedList(item) {
-      const found = this.selectedItem.indexOf(item.food_name)
+      let found = -1
+      for (let i = 0; i < this.selectedList.length; i++) {
+        if (this.selectedList[i].food_name === item.food_name) {
+          found = i
+          break
+        }
+      }
       if (found === -1) {
-        this.selectedItem.push(item.food_name)
         item.quantity = 1
         this.selectedList.push(item)
       }
@@ -116,7 +203,6 @@ export default {
     },
     updateQuantity(name, qnt) {
       let index = -1
-      let itemIndex = -1
       for (let i = 0; i < this.selectedList.length; i++) {
         if (this.selectedList[i].food_name === name) {
           index = i
@@ -132,9 +218,7 @@ export default {
       this.selectedList[index].quantity = qnt
 
       if (this.selectedList[index].quantity <= 0) {
-        itemIndex = this.selectedItem.indexOf(name)
         this.selectedList.splice(index, 1)
-        this.selectedItem.splice(itemIndex, 1)
       }
 
       this.updateTotal()
@@ -144,13 +228,21 @@ export default {
       for (const item of this.selectedList) {
         newPrice += item.price * item.quantity
       }
-      this.total_price = newPrice
+      this.realPrice = newPrice
+      if (this.memberDetails !== '') {
+        this.total_price = newPrice * 0.9
+        this.discount = newPrice * 0.1
+      } else this.total_price = newPrice
     },
 
     clear() {
       this.total_price = 0
-      this.selectedItem = []
       this.selectedList = []
+      this.memberId = ''
+      this.memberDetails = ''
+      this.realPrice = 0
+      this.total_price = 0
+      this.discount = 0
     },
 
     searchMember(e) {
@@ -166,18 +258,61 @@ export default {
         this.memberId += e.key
       }
     },
+
+    updateMenu(index) {
+      if (index === 0) {
+        this.getFoodList('beverage')
+      } else if (index === 1) {
+        this.getFoodList('snack')
+      } else if (index === 2) {
+        this.getFoodList('bakery')
+      }
+    },
+    success() {
+      this.$buefy.toast.open({
+        message: 'ทำรายการสำเร็จ',
+        type: 'is-success',
+      })
+    },
+    danger() {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: `ทำรายการไม่สำเร็จ`,
+        type: 'is-danger',
+      })
+    },
   },
 }
 </script>
 
 <style lang="css" scope>
 .full-height {
-  height: 100vh;
+  display: flex;
+  position: relative;
 }
 
 .card-footer {
   flex-direction: column;
   align-content: center;
   flex-wrap: wrap;
+}
+
+.bg-blue {
+  background-color: #70b6c2;
+}
+
+.price-section {
+  background-color: white;
+  border-radius: 30%;
+}
+
+.is-purple {
+  background-color: #617fab;
+  color: white;
+}
+
+.is-grey {
+  background-color: #bababa;
+  color: white;
 }
 </style>
