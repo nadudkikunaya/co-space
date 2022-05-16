@@ -6,7 +6,7 @@
       aria-label="main navigation"
     >
       <div class="navbar-brand">
-        <a class="navbar-item" href="/main">
+        <a class="navbar-item" href="/">
           <font-awesome-icon icon="home" size="2x" class="" />
         </a>
 

@@ -89,17 +89,19 @@ router.get("/members_get/:member_id/", async (req, res) => {
 // router.post adds a new entry to our database [(member_id), member_firstname, member_lastname, gender, (created_date)]
 // FIXME: Browser just returns/displays "Cannot GET /api/members_post/" wihtout doing anything
 // --> No need to fix, as browser will always send a GET request. We need to us another client to test this out, such as Postman
-router.post("/members_post", async (req, res) => {
-  let { member_firstname, member_lastname, gender } = req.body; // POST parameters are conventionally carried with the body of the HTTP reqeust (so the link won't be too long)
+router.post("/member", async (req, res) => {
+  let { member_firstname, member_lastname, gender, phone } = req.body; // POST parameters are conventionally carried with the body of the HTTP reqeust (so the link won't be too long)
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-    sql = `INSERT INTO \`library\`.\`members\` (\`member_firstname\`, \`member_lastname\`, \`gender\`)
-                    VALUES ('${member_firstname}', '${member_lastname}', '${gender}');`; // member_id and created_will be added by the database automatically
-    const [query_result] = await conn.query(sql);
-    console.log(query_result);
+    sql = `INSERT INTO members (member_firstname, member_lastname, gender, phone) 
+            VALUES ('${member_firstname}', '${member_lastname}', '${gender}', '${phone}')`;
+    // sql = `INSERT INTO \`library\`.\`members\` (\`member_firstname\`, \`member_lastname\`, \`gender\`)
+    //                 VALUES ('${member_firstname}', '${member_lastname}', '${gender}');`; // member_id and created_will be added by the database automatically
+    const [data] = await conn.query(sql);
+    console.log(data);
 
-    if (query_result.affectedRows == 1) {
+    if (data.affectedRows == 1) {
       // TODO: How to determine if the insert query is successful? --> This is already correct
       conn.commit(); // If we don't commit then the db will remain unchanged
       return res.json({ success: true });

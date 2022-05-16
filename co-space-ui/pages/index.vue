@@ -12,15 +12,11 @@
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard title="Ayylmao" icon="book" to-page="booksPage"></MenuCard>
+        <MenuCard title="Book" icon="book" to-page="bookpage"></MenuCard>
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard
-          title="Member"
-          icon="user-large"
-          to-page="memberPage"
-        ></MenuCard>
+        <MenuCard title="Member" icon="user-large" to-page="member"></MenuCard>
       </div>
     </div>
 
