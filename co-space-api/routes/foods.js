@@ -69,17 +69,55 @@ router.get("/foods", async (req, res) => {
   }
 });
 
-router.get("/member", async (req, res) => {
+router.post("/food", async (req, res) => {
+  let {food_name, food_type, price, food_image} = req.body;
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-    sql = `SELECT * FROM members`;
-    const [data] = await conn.query(sql);
+    sql = `INSERT INTO foods (food_name, food_type, price, food_image) 
+            VALUES ('${food_name}', '${food_type}', '${price}', '${food_image}')`;
+    const [query_result] = await conn.query(sql);
+    console.log(query_result);
 
-    return res.json({
-      success: true,
-      data: data,
-    });
+    if (data.affectedRows == 1) {
+      // TODO: How to determine if the insert query is successful? --> This is already correct
+      conn.commit(); // If we don't commit then the db will remain unchanged
+      return res.json({ success: true });
+    } else {
+      conn.rollback();
+      return res.json({ success: false });
+    }
+  } catch (err) {
+    console.log(err);
+    conn.rollback();
+    return res.status(400).json(err.toString());
+  } finally {
+    conn.release();
+  }
+});
+
+router.put("/foods_put", async (req, res) => {
+  let {food_id, food_name, food_type, price, food_image} = req.body;
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    sql = `UPDATE \`library\`.\`foods\`
+            SET \`food_name\` = '${food_name}',
+                \`food_type\` = '${food_type}',
+                \`price\` = '${price}',
+                \`food_image\` = '${food_image}'
+            WHERE (\`food_id\` = '${food_id}');
+            `;
+    const [query_result] = await conn.query(sql);
+    console.log(query_result);
+
+    if (data.affectedRows == 1) {
+      conn.commit(); // If we don't commit then the db will remain unchanged
+      return res.json({ success: true });
+    } else {
+      conn.rollback();
+      return res.json({ success: false });
+    }
   } catch (err) {
     console.log(err);
     conn.rollback();
@@ -88,5 +126,52 @@ router.get("/member", async (req, res) => {
     conn.release();
   }
 });
+
+router.delete("/foods_delete/:food_id/", async (req, res) => {
+  let food_id = req.params.food_id;
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    sql = `DELETE FROM \`library\`.\`foods\`
+                  WHERE (\`food_id\` = \`${food_id}\`);`;
+    const [query_result] = await conn.query(sql);
+
+    if (query_result.affectedRows == 1) {
+      // TODO: How to determine if the delete query is successful? --> This is already correct
+      conn.commit();
+      return res.json({ success: true });
+    } else {
+      conn.rollback();
+      return res.json({ success: false });
+    }
+  } catch (err) {
+    console.log(err);
+    conn.rollback();
+    res.status(400).json(err.toString());
+  } finally {
+    conn.release();
+  }
+});
+
+// The following was just a test
+// router.get("/member", async (req, res) => {
+//   const conn = await pool.getConnection();
+//   await conn.beginTransaction();
+//   try {
+//     sql = `SELECT * FROM members`;
+//     const [data] = await conn.query(sql);
+
+//     return res.json({
+//       success: true,
+//       data: data,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     conn.rollback();
+//     res.status(400).json(err.toString());
+//   } finally {
+//     conn.release();
+//   }
+// });
 
 module.exports = router;
