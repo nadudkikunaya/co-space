@@ -33,7 +33,7 @@
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard title="Setting" icon="gear" to-page="settingPage"></MenuCard>
+        <MenuCard title="Setting" icon="gear" to-page="setting"></MenuCard>
       </div>
       <div class="column is-2"></div>
     </div>

@@ -5,22 +5,22 @@
     >
       <div class="column">
         <MenuCard
-          title="Food/Beverage"
+          title="ตั้งค่าอาหาร"
           icon="utensils"
-          to-page="foodpage"
+          to-page="settingfood"
         ></MenuCard>
-      </div>
-      <div class="column is-1"></div>
-      <div class="column">
-        <MenuCard title="Ayylmao" icon="book" to-page="booksPage"></MenuCard>
       </div>
       <div class="column is-1"></div>
       <div class="column">
         <MenuCard
-          title="Member"
-          icon="user-large"
-          to-page="memberPage"
+          title="ตั้งค่าหนังสือ"
+          icon="book"
+          to-page="settingbook"
         ></MenuCard>
+      </div>
+      <div class="column is-1"></div>
+      <div class="column">
+        <MenuCard title="Member" icon="user-large" to-page="member"></MenuCard>
       </div>
     </div>
 
@@ -37,7 +37,7 @@
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard title="Setting" icon="gear" to-page="settingPage"></MenuCard>
+        <MenuCard title="Setting" icon="gear" to-page="setting"></MenuCard>
       </div>
       <div class="column is-2"></div>
     </div>
@@ -45,7 +45,7 @@
 </template>
 <script>
 export default {
-  name: 'MainPage',
+  name: 'SettingPage',
   components: {
     MenuCard: () => import('@/components/MenuCard'),
   },

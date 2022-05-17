@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { pool, formatDate, client } = require("../config");
+const mysql = require("mysql2/promise");
 
 // Get for only id after path
 router.get("/books/:id/", async (req, res) => {
@@ -21,6 +22,50 @@ router.get("/books/:id/", async (req, res) => {
     return res.json({
       success: true,
       data: query_result, // the varaible name "data" is the agreed upon name that the frontent dev will understand
+    });
+  } catch (err) {
+    console.log(err);
+    conn.rollback();
+    res.status(400).json(err.toString());
+  } finally {
+    conn.release();
+  }
+});
+
+router.get("/books", async (req, res) => {
+  let { page, perPage, searchTerm } = req.query;
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  limitStart = (page - 1) * perPage;
+  let sql, count;
+  if (searchTerm) {
+    searchTerm = "%" + searchTerm.trim() + "%";
+    searchTerm = mysql.escape(searchTerm);
+    count = `SELECT COUNT(books.book_id) as total FROM books 
+    WHERE book_name LIKE ${searchTerm} OR book_type LIKE ${searchTerm}
+   `;
+    sql = `SELECT * FROM books 
+           WHERE book_name LIKE ${searchTerm} OR book_type LIKE ${searchTerm}
+           ORDER BY book_id
+           LIMIT ${limitStart} , ${perPage}
+          `;
+  } else {
+    count = `SELECT COUNT(books.book_id) as total FROM books `;
+    sql = `SELECT * FROM books 
+    ORDER BY book_id
+    LIMIT ${limitStart} , ${perPage}
+   `;
+  }
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    const [[total]] = await conn.query(count);
+    const [data] = await conn.query(sql);
+
+    return res.json({
+      success: true,
+      data: data,
+      total: total.total,
     });
   } catch (err) {
     console.log(err);
