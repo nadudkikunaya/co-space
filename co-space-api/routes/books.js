@@ -37,6 +37,36 @@ router.get("/books/:id/", async (req, res) => {
 // router.post (respond with only sucess status)
 // Post book
 
+router.post("/books", async (req, res) => {
+  let { book_name, book_type, price, quantity, book_image } = req.body; // POST parameters are conventionally carried with the body of the HTTP reqeust (so the link won't be too long)
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    sql = `INSERT INTO books (book_name, book_type, price, quantity, book_image) 
+            VALUES ('${book_name}', '${book_type}', '${price}', '${quantity}' ,'${book_image}')`;
+    // sql = `INSERT INTO \`library\`.\`members\` (\`member_firstname\`, \`member_lastname\`, \`gender\`)
+    //                 VALUES ('${member_firstname}', '${member_lastname}', '${gender}');`; // member_id and created_will be added by the database automatically
+    const [data] = await conn.query(sql);
+    console.log(data);
+
+    if (data.affectedRows == 1) {
+      // TODO: How to determine if the insert query is successful? --> This is already correct
+      conn.commit(); // If we don't commit then the db will remain unchanged
+      return res.json({ success: true });
+    } else {
+      return res.json({ success: false });
+    }
+  } catch (err) {
+    console.log(err);
+    conn.rollback();
+    return res.status(400).json(err.toString());
+  } finally {
+    conn.release();
+  }
+});
+
+
+//put
 
 router.put("/books", async (req, res) => {
   let { book_id ,book_name, book_type, price, quantity, book_image } = req.body; // POST parameters are conventionally carried with the body of the HTTP reqeust (so the link won't be too long)
@@ -80,13 +110,13 @@ router.put("/books", async (req, res) => {
 
 
 
-router.delete("/books_delete/:books_id/", async (req, res) => {
-  let books_id = req.params.books_id;
+router.delete("/books_delete/:book_id/", async (req, res) => {
+  let book_id = req.params.book_id;
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
     sql = `DELETE FROM \`library\`.\`books\`
-                    WHERE (\`books_id\` = '${books_id}');`;
+                    WHERE (\`book_id\` = '${book_id}');`;
     const [query_result] = await conn.query(sql);
 
     if (query_result.affectedRows == 1) {
@@ -113,7 +143,6 @@ module.exports = router;
 
 
 
-// router.delete (respond with only sucess status)
 
 
 
@@ -122,4 +151,4 @@ module.exports = router;
 
 
 
-module.exports = router;
+
