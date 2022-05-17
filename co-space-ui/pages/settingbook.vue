@@ -3,6 +3,7 @@
     <PageNavbar />
     <section class="section is-small">
       <div class="box">
+        <b-button @click="openAddBookModal()">เพิ่มหนังสือ</b-button>
         <b-input
           v-model="searchTerm"
           @change="searchFromInput()"
@@ -49,16 +50,16 @@
           <b-table-column
             :field="field_5"
             label="จำนวน"
-            width="50"
+            width="40"
             numeric
             v-slot="props"
           >
-            {{ props.row.quantity || '-' }}
+            {{ props.row.quantity }}
           </b-table-column>
 
           <b-table-column label="" v-slot="props">
-            <button @click="test(props.row.food_id)">edit</button>
-            <button @click="test(props.row.food_id)">delete</button>
+            <button @click="openEditBookModal(props.row)">edit</button>
+            <button @click="deleteBook(props.row.book_id)">delete</button>
           </b-table-column>
 
           <template #empty>
@@ -87,16 +88,46 @@
         ></b-table> -->
       </div>
     </section>
+    <b-modal
+      v-model="isEditBookModal"
+      :width="900"
+      trap-focus
+      :destroy-on-hide="true"
+      aria-role="dialog"
+      aria-label="Example Modal"
+      aria-modal
+    >
+      <EditBookModal
+        :modalData="Object.assign({}, modalData)"
+        @close="closeEditBookModal"
+        @updateData="updateData"
+      ></EditBookModal>
+    </b-modal>
+
+    <b-modal
+      v-model="isAddBookModal"
+      :width="900"
+      trap-focus
+      :destroy-on-hide="true"
+      aria-role="dialog"
+      aria-label="Example Modal"
+      aria-modal
+      @reload="getBookList"
+    >
+      <AddBookModal @close="closeAddBookModal"></AddBookModal>
+    </b-modal>
   </div>
 </template>
 <script>
 import { axios } from '@/plugins/axios'
 export default {
   name: 'SettingBook',
-  components: {},
+  components: {
+    EditBookModal: () => import('@/components/EditBookModal'),
+    AddBookModal: () => import('@/components/AddBookModal'),
+  },
   data() {
     return {
-      selectedTab: 0,
       data: [],
       columns: [],
       hasMobileCards: true,
@@ -113,6 +144,9 @@ export default {
       isSimple: true,
       prevIcon: 'chevron-left',
       nextIcon: 'chevron-right',
+      isEditBookModal: false,
+      isAddBookModal: false,
+      modalData: {},
     }
   },
   watch: {
@@ -131,11 +165,53 @@ export default {
         `/books?page=${this.page}&perPage=${this.perPage}&searchTerm=${this.searchTerm}`,
         {}
       )
+      console.log(response)
       this.data = response.data.data
       this.total = response.data.total
     },
+
+    async deleteBook(bookId) {
+      let index = -1
+      const response = await axios.delete(`/books_delete/${bookId}`, {})
+      if (response.data.success) {
+        this.success()
+        for (let i = 0; i < this.data.length; i++) {
+          if (this.data[i].book_id === bookId) {
+            index = i
+          }
+        }
+        if (index > -1) this.data.splice(index, 1)
+      } else this.danger()
+    },
+
     async searchFromInput() {
       await this.getBookList()
+    },
+    openAddBookModal() {
+      this.isAddBookModal = true
+    },
+    closeAddBookModal() {
+      this.isAddBookModal = false
+    },
+    openEditBookModal(val) {
+      this.isEditBookModal = true
+      this.modalData = val
+    },
+    closeEditBookModal() {
+      this.isEditBookModal = false
+      this.modalData = {}
+    },
+    updateData(data) {
+      for (let i = 0; i < this.data.length; i++) {
+        if (this.data[i].book_id === data.book_id) {
+          this.data[i].book_name = data.book_name
+          this.data[i].book_type = data.book_type
+          this.data[i].price = data.price
+          this.data[i].quantity = data.quantity
+          this.data[i].book_image = data.book_image
+          return
+        }
+      }
     },
     success() {
       this.$buefy.toast.open({

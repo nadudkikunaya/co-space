@@ -70,14 +70,14 @@ router.get("/foods", async (req, res) => {
 });
 
 router.post("/food", async (req, res) => {
-  let {food_name, food_type, price, food_image} = req.body;
+  let { food_name, food_type, price, food_image } = req.body;
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
     sql = `INSERT INTO foods (food_name, food_type, price, food_image) 
             VALUES ('${food_name}', '${food_type}', '${price}', '${food_image}')`;
-    const [query_result] = await conn.query(sql);
-    console.log(query_result);
+    const [data] = await conn.query(sql);
+    console.log(data);
 
     if (data.affectedRows == 1) {
       // TODO: How to determine if the insert query is successful? --> This is already correct
@@ -97,7 +97,7 @@ router.post("/food", async (req, res) => {
 });
 
 router.put("/foods_put", async (req, res) => {
-  let {food_id, food_name, food_type, price, food_image} = req.body;
+  let { food_id, food_name, food_type, price, food_image } = req.body;
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
@@ -108,8 +108,8 @@ router.put("/foods_put", async (req, res) => {
                 \`food_image\` = '${food_image}'
             WHERE (\`food_id\` = '${food_id}');
             `;
-    const [query_result] = await conn.query(sql);
-    console.log(query_result);
+    const [data] = await conn.query(sql);
+    console.log(data);
 
     if (data.affectedRows == 1) {
       conn.commit(); // If we don't commit then the db will remain unchanged
@@ -133,10 +133,10 @@ router.delete("/foods_delete/:food_id/", async (req, res) => {
   await conn.beginTransaction();
   try {
     sql = `DELETE FROM \`library\`.\`foods\`
-                  WHERE (\`food_id\` = \`${food_id}\`);`;
-    const [query_result] = await conn.query(sql);
+                  WHERE (\`food_id\` = ${food_id});`;
+    const [data] = await conn.query(sql);
 
-    if (query_result.affectedRows == 1) {
+    if (data.affectedRows == 1) {
       // TODO: How to determine if the delete query is successful? --> This is already correct
       conn.commit();
       return res.json({ success: true });

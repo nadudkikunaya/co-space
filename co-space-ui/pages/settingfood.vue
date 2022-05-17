@@ -3,6 +3,7 @@
     <PageNavbar />
     <section class="section is-small">
       <div class="box">
+        <b-button @click="openAddFoodModal()">เพิ่มอาหาร</b-button>
         <b-input
           v-model="searchTerm"
           @change="searchFromInput()"
@@ -87,9 +88,23 @@
       aria-modal
     >
       <EditFoodModal
+        :modalData="Object.assign({}, modalData)"
         @close="closeEditFoodModal"
-        :modalData="modalData"
+        @updateData="updateData"
       ></EditFoodModal>
+    </b-modal>
+
+    <b-modal
+      v-model="isAddFoodModal"
+      :width="900"
+      trap-focus
+      :destroy-on-hide="true"
+      aria-role="dialog"
+      aria-label="Example Modal"
+      aria-modal
+      @reload="getFoodList"
+    >
+      <AddFoodModal @close="closeAddFoodModal"></AddFoodModal>
     </b-modal>
   </div>
 </template>
@@ -99,6 +114,7 @@ export default {
   name: 'SettingFood',
   components: {
     EditFoodModal: () => import('@/components/EditFoodModal'),
+    AddFoodModal: () => import('@/components/AddFoodModal'),
   },
   data() {
     return {
@@ -118,6 +134,7 @@ export default {
       prevIcon: 'chevron-left',
       nextIcon: 'chevron-right',
       isEditFoodModal: false,
+      isAddFoodModal: false,
       modalData: {},
     }
   },
@@ -141,16 +158,29 @@ export default {
       this.data = response.data.data
       this.total = response.data.total
     },
-    async getBookList() {
-      const response = await axios.get(
-        `/books?page=${this.page}&perPage=${this.perPage}&searchTerm=${this.searchTerm}`,
-        {}
-      )
-      this.data = response.data.data
-      this.total = response.data.total
+
+    async deleteFood(foodId) {
+      let index = -1
+      const response = await axios.delete(`/foods_delete/${foodId}`, {})
+      if (response.data.success) {
+        this.success()
+        for (let i = 0; i < this.data.length; i++) {
+          if (this.data[i].food_id === foodId) {
+            index = i
+          }
+        }
+        if (index > -1) this.data.splice(index, 1)
+      } else this.danger()
     },
+
     async searchFromInput() {
       await this.getFoodList()
+    },
+    openAddFoodModal() {
+      this.isAddFoodModal = true
+    },
+    closeAddFoodModal() {
+      this.isAddFoodModal = false
     },
     openEditFoodModal(val) {
       this.isEditFoodModal = true
@@ -159,6 +189,17 @@ export default {
     closeEditFoodModal() {
       this.isEditFoodModal = false
       this.modalData = {}
+    },
+    updateData(data) {
+      for (let i = 0; i < this.data.length; i++) {
+        if (this.data[i].food_id === data.food_id) {
+          this.data[i].food_name = data.food_name
+          this.data[i].food_type = data.food_type
+          this.data[i].price = parseFloat(data.price)
+          this.data[i].food_image = data.food_image
+          return
+        }
+      }
     },
     toThai(val) {
       if (val === 'bakery') return 'เบเกอรี่'

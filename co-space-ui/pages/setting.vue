@@ -6,7 +6,7 @@
       <div class="column">
         <MenuCard
           title="ตั้งค่าอาหาร"
-          icon="utensils"
+          icon="wrench"
           to-page="settingfood"
         ></MenuCard>
       </div>
@@ -14,13 +14,17 @@
       <div class="column">
         <MenuCard
           title="ตั้งค่าหนังสือ"
-          icon="book"
+          icon="wrench"
           to-page="settingbook"
         ></MenuCard>
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard title="Member" icon="user-large" to-page="member"></MenuCard>
+        <MenuCard
+          title="ตั้งค่าแผนก"
+          icon="wrench"
+          to-page="settingdepartment"
+        ></MenuCard>
       </div>
     </div>
 
@@ -30,9 +34,9 @@
       <div class="column is-2"></div>
       <div class="column">
         <MenuCard
-          title="Report"
-          icon="chart-pie"
-          to-page="reportPage"
+          title="ตั้งค่าพนักงาน"
+          icon="wrench"
+          to-page="settingstaff"
         ></MenuCard>
       </div>
       <div class="column is-1"></div>
