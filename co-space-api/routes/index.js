@@ -4,6 +4,8 @@ const foods = require("./foods");
 const members = require("./members");
 const books = require("./books");
 const sales = require("./sales");
+const staffs = require("./staffs");
+const departments = require("./departments");
 
 // testapi
 // const krit = require("./testapi/krit");
@@ -12,6 +14,8 @@ const sales = require("./sales");
 // router.use(chopang);
 
 // production
+router.use(departments);
+router.use(staffs);
 router.use(foods);
 router.use(members);
 router.use(books);
