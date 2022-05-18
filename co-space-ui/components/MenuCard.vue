@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     changePage() {
-      this.$buefy.notification.open(this.toPage)
+      // this.$buefy.notification.open(this.toPage)
       this.$router.push({
         name: this.toPage,
         params: {},

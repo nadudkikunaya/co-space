@@ -7,10 +7,14 @@
         class="columns is-variable is-2-mobile is-0-tablet is-5-desktop is-5-widescreen is-5-fullhd"
       >
         <div class="column is-3"></div>
-        <div class="column is-6">
+        <div v-if="selectedTab === 1" class="column is-6">
           <div class="card">
             <div class="card-content">
               <div class="content has-text-centered">
+                <b-tabs v-model="selectedTab">
+                  <b-tab-item label="ลงชื่อเข้าใช้งาน"></b-tab-item>
+                  <b-tab-item label="สมัครสมาชิก"></b-tab-item>
+                </b-tabs>
                 <div class="columns">
                   <div class="column is-12">
                     <b-input
@@ -55,6 +59,38 @@
             </div>
           </div>
         </div>
+        <div v-if="selectedTab === 0" class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="content has-text-centered">
+                <b-tabs v-model="selectedTab">
+                  <b-tab-item label="ลงชื่อเข้าใช้งาน"></b-tab-item>
+                  <b-tab-item label="สมัครสมาชิก"></b-tab-item>
+                </b-tabs>
+                <div class="columns">
+                  <div class="column is-12">
+                    <b-input
+                      v-model="memberId"
+                      size="is-medium"
+                      placeholder="เบอร์โทรศัพท์"
+                      rounded
+                    ></b-input>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column is-4"></div>
+                  <div class="column is-4">
+                    <b-button size="is-medium bg-blue" @click="addVisit"
+                      >ลงชื่อเข้าใช้งาน</b-button
+                    >
+                  </div>
+                  <div class="column is-4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="column is-3"></div>
       </div>
     </section>
@@ -72,14 +108,25 @@ export default {
       lastname: '',
       phone: '',
       gender: 'male',
+      selectedTab: 0,
+      memberId: '',
     }
   },
   mounted() {},
   methods: {
+    async addVisit() {
+      const response = await axios.post(`/visit`, {
+        memberId: this.memberId,
+      })
+      if (response.data.success) {
+        this.success()
+        this.clear()
+      } else this.danger(response.data.reason)
+    },
     async addMember() {
       const arr = this.fullname.split(' ')
       if (arr.length < 2 || this.phone === '') {
-        this.danger()
+        this.danger('กรุณาใส่ชื่อและนามสกุล')
         return
       }
       this.firstname = arr[0]
@@ -93,7 +140,7 @@ export default {
       if (response.data.success) {
         this.success()
         this.clear()
-      } else this.danger()
+      } else this.danger(response.data.reason)
     },
     clear() {
       this.fullname = ''
@@ -108,10 +155,11 @@ export default {
         type: 'is-success',
       })
     },
-    danger() {
+    danger(reason) {
+      if (reason === null || reason === undefined) reason = ''
       this.$buefy.toast.open({
         duration: 5000,
-        message: `ทำรายการไม่สำเร็จ`,
+        message: `ทำรายการไม่สำเร็จ ${reason}`,
         type: 'is-danger',
       })
     },

@@ -94,6 +94,13 @@ router.post("/member", async (req, res) => {
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
+    sqlcheck = `SELECT * FROM members WHERE phone = ${phone}`;
+    const [check] = await conn.query(sqlcheck);
+    if (check.length > 0)
+      return res.json({
+        success: false,
+        reason: "หมายเลขมือถือนี้ถูกใช้งานแล้ว",
+      });
     sql = `INSERT INTO members (member_firstname, member_lastname, gender, phone) 
             VALUES ('${member_firstname}', '${member_lastname}', '${gender}', '${phone}')`;
     // sql = `INSERT INTO \`library\`.\`members\` (\`member_firstname\`, \`member_lastname\`, \`gender\`)
