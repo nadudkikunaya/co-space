@@ -28,7 +28,7 @@
         <MenuCard
           title="Report"
           icon="chart-pie"
-          to-page="reportPage"
+          to-page="testchart"
         ></MenuCard>
       </div>
       <div class="column is-1"></div>

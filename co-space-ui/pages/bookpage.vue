@@ -2,7 +2,6 @@
   <div>
     <PageNavbar />
     <section class="section is-small">
-      <p class="title">เหมือน Food แต่เป็นหนังสือ</p>
       <div class="columns">
         <div class="column is-3">
           <div class="card">
@@ -11,10 +10,12 @@
               <div class="">
                 <!-- <div class="">{{ selectedItem }}</div> -->
 
-                <div v-for="item in selectedList" :key="item.food_id">
+                <div v-for="item in selectedList" :key="item.book_id">
                   <SelectedFood
-                    :name="item.food_name"
+                    :name="item.book_name"
                     :price="parseInt(item.price)"
+                    :selectedQuantity="item.selectedQuantity"
+                    page="book"
                     :quantity="item.quantity"
                     @updateQuantity="updateQuantity"
                   ></SelectedFood>
@@ -82,14 +83,18 @@
           <div class="card">
             <div class="card-content">
               <b-tabs v-model="selectedTab">
-                <b-tab-item label="เครื่องดื่ม"></b-tab-item>
-                <b-tab-item label="ขนมขบเคี้ยว"></b-tab-item>
-                <b-tab-item label="เบเกอรี่"></b-tab-item>
+                <b-tab-item label="เบ็ดเตล็ด"></b-tab-item>
+                <b-tab-item label="พัฒนาตนเอง"></b-tab-item>
+                <b-tab-item label="การ์ตูน"></b-tab-item>
+                <b-tab-item label="การศึกษา"></b-tab-item>
+                <b-tab-item label="อาหาร"></b-tab-item>
               </b-tabs>
+
               <div class="content has-text-centered"></div>
+              <b-input v-model="searchTerm" size="is-small" rounded></b-input>
               <div
                 v-for="row in Math.ceil(productList.length / 4)"
-                :key="row.food_id"
+                :key="row.book_id"
                 class="columns is-variable is-2-mobile is-0-tablet is-8-desktop is-8-widescreen is-8-fullhd"
               >
                 <div
@@ -102,11 +107,13 @@
                 >
                   <FoodCard
                     v-if="4 * (row - 1) + (i - 1) <= productList.length - 1"
-                    :name="productList[4 * (row - 1) + (i - 1)].food_name"
-                    :img="productList[4 * (row - 1) + (i - 1)].food_image"
+                    :name="productList[4 * (row - 1) + (i - 1)].book_name"
+                    :img="productList[4 * (row - 1) + (i - 1)].book_image"
                     :price="
                       parseInt(productList[4 * (row - 1) + (i - 1)].price)
                     "
+                    :quantity="productList[4 * (row - 1) + (i - 1)].quantity"
+                    page="book"
                   ></FoodCard>
                 </div>
                 <!-- <div
@@ -140,6 +147,7 @@ export default {
       memberDetails: '',
       discount: 0,
       realPrice: 0,
+      searchTerm: '',
     }
   },
   watch: {
@@ -157,13 +165,22 @@ export default {
         }
       }, 1000)
     },
+
+    searchTerm(value) {
+      setTimeout(() => {
+        this.getBookList(this.indexToType(this.selectedTab))
+      }, 1000)
+    },
   },
   async mounted() {
-    await this.getFoodList('beverage')
+    await this.getBookList('เบ็ดเตล็ด')
   },
   methods: {
-    async getFoodList(type) {
-      const response = await axios.get(`/foodlist?type=${type}`, {})
+    async getBookList(type) {
+      const response = await axios.get(
+        `/booklist?type=${type}&searchTerm=${this.searchTerm}`,
+        {}
+      )
       this.productList = response.data.data
     },
 
@@ -174,7 +191,7 @@ export default {
     },
 
     async createTransaction() {
-      const response = await axios.post(`/sale_foods`, {
+      const response = await axios.post(`/sale_books`, {
         selectedList: this.selectedList,
         total: this.realPrice,
         staff_id: 1,
@@ -184,6 +201,9 @@ export default {
       if (response.data.success) {
         this.success()
         this.clear()
+        this.selectedTab = 0
+        this.getBookList('เบ็ดเตล็ด')
+        this.searchTerm = ''
       } else {
         this.danger()
       }
@@ -191,21 +211,23 @@ export default {
     addToSelectedList(item) {
       let found = -1
       for (let i = 0; i < this.selectedList.length; i++) {
-        if (this.selectedList[i].food_name === item.food_name) {
+        if (this.selectedList[i].book_name === item.book_name) {
           found = i
           break
         }
       }
-      if (found === -1) {
-        item.quantity = 1
+      if (found === -1 && item.quantity > 0) {
+        item.selectedQuantity = 1
         this.selectedList.push(item)
+        this.updateTotal()
+      } else {
+        this.dangerNotEnough()
       }
-      this.updateTotal()
     },
     updateQuantity(name, qnt) {
       let index = -1
       for (let i = 0; i < this.selectedList.length; i++) {
-        if (this.selectedList[i].food_name === name) {
+        if (this.selectedList[i].book_name === name) {
           index = i
           break
         }
@@ -216,9 +238,9 @@ export default {
         return
       }
 
-      this.selectedList[index].quantity = qnt
+      this.selectedList[index].selectedQuantity = qnt
 
-      if (this.selectedList[index].quantity <= 0) {
+      if (this.selectedList[index].selectedQuantity <= 0) {
         this.selectedList.splice(index, 1)
       }
 
@@ -227,7 +249,7 @@ export default {
     updateTotal() {
       let newPrice = 0
       for (const item of this.selectedList) {
-        newPrice += item.price * item.quantity
+        newPrice += item.price * item.selectedQuantity
       }
       this.realPrice = newPrice
       if (this.memberDetails !== '') {
@@ -261,12 +283,19 @@ export default {
     },
 
     updateMenu(index) {
+      this.getBookList(this.indexToType(index))
+    },
+    indexToType(index) {
       if (index === 0) {
-        this.getFoodList('beverage')
+        return 'เบ็ดเตล็ด'
       } else if (index === 1) {
-        this.getFoodList('snack')
+        return 'พัฒนาตนเอง'
       } else if (index === 2) {
-        this.getFoodList('bakery')
+        return 'การ์ตูน'
+      } else if (index === 3) {
+        return 'การศึกษา'
+      } else if (index === 4) {
+        return 'อาหาร'
       }
     },
     success() {
@@ -279,6 +308,13 @@ export default {
       this.$buefy.toast.open({
         duration: 5000,
         message: `ทำรายการไม่สำเร็จ`,
+        type: 'is-danger',
+      })
+    },
+    dangerNotEnough() {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: `หนังสือหมดแล้ว`,
         type: 'is-danger',
       })
     },

@@ -14,7 +14,8 @@
                   <SelectedFood
                     :name="item.food_name"
                     :price="parseInt(item.price)"
-                    :quantity="item.quantity"
+                    :selectedQuantity="item.selectedQuantity"
+                    page="food"
                     @updateQuantity="updateQuantity"
                   ></SelectedFood>
                 </div>
@@ -86,6 +87,7 @@
                 <b-tab-item label="เบเกอรี่"></b-tab-item>
               </b-tabs>
               <div class="content has-text-centered"></div>
+              <b-input v-model="searchTerm" size="is-small" rounded></b-input>
               <div
                 v-for="row in Math.ceil(productList.length / 4)"
                 :key="row.food_id"
@@ -106,6 +108,7 @@
                     :price="
                       parseInt(productList[4 * (row - 1) + (i - 1)].price)
                     "
+                    page="food"
                   ></FoodCard>
                 </div>
                 <!-- <div
@@ -139,11 +142,17 @@ export default {
       memberDetails: '',
       discount: 0,
       realPrice: 0,
+      searchTerm: '',
     }
   },
   watch: {
     selectedTab(value) {
       this.updateMenu(value)
+    },
+    searchTerm(value) {
+      setTimeout(() => {
+        this.getFoodList(this.indexToType(this.selectedTab))
+      }, 1000)
     },
 
     memberId(value) {
@@ -158,11 +167,14 @@ export default {
     },
   },
   async mounted() {
-    await this.getFoodList('beverage')
+    await this.getFoodList(this.indexToType(0))
   },
   methods: {
     async getFoodList(type) {
-      const response = await axios.get(`/foodlist?type=${type}`, {})
+      const response = await axios.get(
+        `/foodlist?type=${type}&searchTerm=${this.searchTerm}`,
+        {}
+      )
       this.productList = response.data.data
     },
 
@@ -196,7 +208,7 @@ export default {
         }
       }
       if (found === -1) {
-        item.quantity = 1
+        item.selectedQuantity = 1
         this.selectedList.push(item)
       }
       this.updateTotal()
@@ -215,9 +227,9 @@ export default {
         return
       }
 
-      this.selectedList[index].quantity = qnt
+      this.selectedList[index].selectedQuantity = qnt
 
-      if (this.selectedList[index].quantity <= 0) {
+      if (this.selectedList[index].selectedQuantity <= 0) {
         this.selectedList.splice(index, 1)
       }
 
@@ -226,7 +238,7 @@ export default {
     updateTotal() {
       let newPrice = 0
       for (const item of this.selectedList) {
-        newPrice += item.price * item.quantity
+        newPrice += item.price * item.selectedQuantity
       }
       this.realPrice = newPrice
       if (this.memberDetails !== '') {
@@ -260,12 +272,15 @@ export default {
     },
 
     updateMenu(index) {
+      this.getFoodList(this.indexToType(index))
+    },
+    indexToType(index) {
       if (index === 0) {
-        this.getFoodList('beverage')
+        return 'beverage'
       } else if (index === 1) {
-        this.getFoodList('snack')
+        return 'snack'
       } else if (index === 2) {
-        this.getFoodList('bakery')
+        return 'bakery'
       }
     },
     success() {

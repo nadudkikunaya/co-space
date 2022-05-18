@@ -23,7 +23,7 @@ export default {
   name: 'SelectedFood',
   data() {
     return {
-      qnt: this.quantity,
+      qnt: this.selectedQuantity,
       base_price: this.price,
       calc_price: this.price,
     }
@@ -33,7 +33,7 @@ export default {
       type: String,
       required: true,
     },
-    quantity: {
+    selectedQuantity: {
       type: Number,
       required: true,
     },
@@ -41,19 +41,35 @@ export default {
       type: Number,
       required: true,
     },
+    quantity: {
+      type: Number,
+    },
+    page: {
+      type: String,
+    },
   },
   methods: {
     increase() {
-      this.qnt++
-      this.calc_price = this.base_price * this.qnt
-      // console.log(this.qnt)
-      this.$emit('updateQuantity', this.name, this.qnt)
+      if (this.page === 'food' || this.qnt + 1 <= this.quantity) {
+        this.qnt++
+        console.log(this.qnt)
+        this.calc_price = this.base_price * this.qnt
+        // console.log(this.qnt)
+        this.$emit('updateQuantity', this.name, this.qnt)
+      } else this.danger()
     },
     decrease() {
       this.qnt--
       // console.log(this.qnt)
       this.calc_price = this.base_price * this.qnt
       this.$emit('updateQuantity', this.name, this.qnt)
+    },
+    danger() {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: `หนังสือมีแค่ ${this.quantity} เล่ม`,
+        type: 'is-danger',
+      })
     },
   },
 }

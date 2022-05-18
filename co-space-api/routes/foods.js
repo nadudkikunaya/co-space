@@ -4,13 +4,18 @@ const { pool, formatDate, client } = require("../config");
 const mysql = require("mysql2/promise");
 
 router.get("/foodlist", async (req, res) => {
-  type = req.query.type;
+  let { type, searchTerm } = req.query;
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-    sql = `SELECT * FROM foods WHERE food_type = '${type}'`;
+    if (searchTerm != "") {
+      searchTerm = "%" + searchTerm.trim() + "%";
+      searchTerm = mysql.escape(searchTerm);
+      sql = `SELECT * FROM foods WHERE food_type = '${type}' AND food_name LIKE ${searchTerm}`;
+    } else {
+      sql = `SELECT * FROM foods WHERE food_type = '${type}'`;
+    }
     const [data] = await conn.query(sql);
-
     return res.json({
       success: true,
       data: data,

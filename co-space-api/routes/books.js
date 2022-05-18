@@ -31,6 +31,31 @@ router.get("/books/:id/", async (req, res) => {
   }
 });
 
+router.get("/booklist", async (req, res) => {
+  let { type, searchTerm } = req.query;
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    if (searchTerm != "") {
+      searchTerm = "%" + searchTerm.trim() + "%";
+      searchTerm = mysql.escape(searchTerm);
+      sql = `SELECT * FROM books WHERE book_type = '${type}' AND book_name LIKE ${searchTerm}`;
+    } else {
+      sql = `SELECT * FROM books WHERE book_type = '${type}'`;
+    }
+    const [data] = await conn.query(sql);
+    return res.json({
+      success: true,
+      data: data,
+    });
+  } catch (err) {
+    console.log(err);
+    conn.rollback();
+    res.status(400).json(err.toString());
+  } finally {
+    conn.release();
+  }
+});
 // router.post (respond with only sucess status)
 // Post book
 

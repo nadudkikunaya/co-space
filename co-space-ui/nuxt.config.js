@@ -13,6 +13,10 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
+  server: {
+    host: '0.0.0.0', // default: localhost
+    port: 3000,
+  },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['@fortawesome/fontawesome-svg-core/styles.css'],
@@ -27,6 +31,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
+    '@nuxtjs/dotenv',
+    ['@nuxtjs/dotenv', { filename: '.env' }],
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -40,7 +46,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'http://localhost:8080/api',
+    baseURL: process.env.BASEURL || 'http://localhost:8080/api',
     withCredentials: true,
   },
 

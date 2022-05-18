@@ -8,8 +8,15 @@
             <p class="has-text-centered">
               {{ name }}
             </p>
-            <p class="has-text-centered">
-              {{ price }}
+            <p class="has-text-centered">ราคา ：{{ price }}฿</p>
+            <p v-if="page === 'book' && quantity > 0" class="has-text-centered">
+              จำนวน : {{ quantity }}
+            </p>
+            <p
+              v-else-if="page === 'book' && quantity === 0"
+              class="text-red has-text-centered"
+            >
+              หนังสือหมด
             </p>
           </div>
         </div>
@@ -37,9 +44,19 @@ export default {
       type: String,
       require: true,
     },
+    quantity: {
+      type: Number,
+    },
+    page: {
+      type: String,
+    },
   },
   methods: {},
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.text-red {
+  color: red;
+}
+</style>
