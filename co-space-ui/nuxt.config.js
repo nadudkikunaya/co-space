@@ -32,6 +32,8 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     '@nuxtjs/dotenv',
+    '@nuxtjs/moment',
+
     ['@nuxtjs/dotenv', { filename: '.env' }],
   ],
 

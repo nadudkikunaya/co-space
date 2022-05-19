@@ -54,7 +54,6 @@ export default {
 }
 
 .card:hover {
-  background: red;
-  transition-delay: 1s;
+  background: rgb(202, 202, 202);
 }
 </style>

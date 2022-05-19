@@ -26,7 +26,7 @@
       </section>
       <footer class="modal-card-foot is-justify-content-flex-end">
         <b-button label="ยกเลิก" @click="closeModal" />
-        <b-button label="เพิ่มอาหาร" @click="insertFood()" type="is-primary" />
+        <b-button label="เพิ่มอาหาร" @click="insertFood()" class="is-blue" />
       </footer>
     </div>
   </form>
@@ -82,7 +82,7 @@ export default {
 
     toThai(val) {
       if (val === 'bakery') return 'เบเกอรี่'
-      else if (val === 'snack') return 'ขนมชบเคี้ยว'
+      else if (val === 'snack') return 'ขนมขบเคี้ยว'
       else if (val === 'beverage') return 'เครื่องเดื่ม'
     },
     success() {
@@ -101,3 +101,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.is-blue {
+  background: #70b6c2;
+  color: white;
+}
+</style>

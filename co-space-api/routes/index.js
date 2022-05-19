@@ -7,6 +7,7 @@ const sales = require("./sales");
 const staffs = require("./staffs");
 const departments = require("./departments");
 const visit = require("./visit");
+const chart = require("./chart");
 
 // testapi
 // const krit = require("./testapi/krit");
@@ -22,4 +23,5 @@ router.use(members);
 router.use(books);
 router.use(sales);
 router.use(visit);
+router.use(chart);
 module.exports = router;

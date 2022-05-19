@@ -36,11 +36,7 @@
       </section>
       <footer class="modal-card-foot is-justify-content-flex-end">
         <b-button label="ยกเลิก" @click="closeModal" />
-        <b-button
-          label="แก้ไขพนักงาน"
-          @click="updateData()"
-          type="is-primary"
-        />
+        <b-button label="แก้ไขพนักงาน" @click="updateData()" class="is-blue" />
       </footer>
     </div>
   </form>
@@ -129,3 +125,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.is-blue {
+  background: #70b6c2;
+  color: white;
+}
+</style>

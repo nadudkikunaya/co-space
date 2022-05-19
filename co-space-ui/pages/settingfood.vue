@@ -3,13 +3,25 @@
     <PageNavbar />
     <section class="section is-small">
       <div class="box">
-        <b-button @click="openAddFoodModal()">เพิ่มอาหาร</b-button>
-        <b-input
-          v-model="searchTerm"
-          @change="searchFromInput()"
-          size="is-small"
-          rounded
-        ></b-input>
+        <div class="columns">
+          <div class="column is-4">
+            <b-field label="ค้นหา">
+              <b-input
+                v-model="searchTerm"
+                placeholder="คำค้นหา"
+                size="is-small"
+                @change="searchFromInput()"
+                rounded
+              ></b-input>
+            </b-field>
+          </div>
+          <div class="column is-5"></div>
+          <div class="column is-3 has-text-right">
+            <b-button class="is-blue" @click="openAddFoodModal()"
+              >เพิ่มอาหาร</b-button
+            >
+          </div>
+        </div>
         <b-table
           :data="data === [] ? [] : data"
           :striped="isStriped"
@@ -48,8 +60,21 @@
           </b-table-column>
 
           <b-table-column label="" v-slot="props">
-            <button @click="openEditFoodModal(props.row)">edit</button>
-            <button @click="deleteFood(props.row.food_id)">delete</button>
+            <b-button
+              size="is-small"
+              type="is-warning is-light"
+              @click="openEditFoodModal(props.row)"
+              ><font-awesome-icon icon="pen-to-square" />
+              แก้ไข
+            </b-button>
+            <b-button
+              type="is-danger"
+              size="is-small"
+              @click="deleteFood(props.row.food_id)"
+              icon-right="delete"
+            >
+              ลบรายการ
+            </b-button>
           </b-table-column>
 
           <template #empty>
@@ -203,7 +228,7 @@ export default {
     },
     toThai(val) {
       if (val === 'bakery') return 'เบเกอรี่'
-      else if (val === 'snack') return 'ขนมชบเคี้ยว'
+      else if (val === 'snack') return 'ขนมขบเคี้ยว'
       else if (val === 'beverage') return 'เครื่องเดื่ม'
     },
     success() {
@@ -222,3 +247,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.is-blue {
+  background: #70b6c2;
+  color: white;
+}
+</style>

@@ -18,8 +18,8 @@ router.post("/sale_foods", async (req, res) => {
       salesInsert = `INSERT INTO sale_foods (bill_id, food_id, quantity, price) 
                      VALUES (${qryBillInsert.insertId}, ${
         selectedList[i].food_id
-      }, ${selectedList[i].quantity}, ${
-        selectedList[i].price * selectedList[i].quantity
+      }, ${selectedList[i].selectedQuantity}, ${
+        selectedList[i].price * selectedList[i].selectedQuantity
       })`;
       const qrySalesInsert = await conn.query(salesInsert);
     }
@@ -60,6 +60,7 @@ router.post("/sale_books", async (req, res) => {
     }
 
     for (let i = 0; i < selectedList.length; i++) {
+      console.log(selectedList[i]);
       updateQuantity = `UPDATE books SET quantity = ${
         selectedList[i].quantity - selectedList[i].selectedQuantity
       } WHERE book_id = ${selectedList[i].book_id}`;

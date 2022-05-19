@@ -86,8 +86,19 @@
                 <b-tab-item label="ขนมขบเคี้ยว"></b-tab-item>
                 <b-tab-item label="เบเกอรี่"></b-tab-item>
               </b-tabs>
-              <div class="content has-text-centered"></div>
-              <b-input v-model="searchTerm" size="is-small" rounded></b-input>
+              <div class="columns">
+                <div class="column is-4">
+                  <b-field label="ค้นหา">
+                    <b-input
+                      v-model="searchTerm"
+                      placeholder="คำค้นหา"
+                      size="is-small"
+                      rounded
+                    ></b-input>
+                  </b-field>
+                </div>
+              </div>
+
               <div
                 v-for="row in Math.ceil(productList.length / 4)"
                 :key="row.food_id"

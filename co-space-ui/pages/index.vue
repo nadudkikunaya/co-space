@@ -5,18 +5,18 @@
     >
       <div class="column">
         <MenuCard
-          title="Food/Beverage"
+          title="อาหารและเครื่องดื่ม"
           icon="utensils"
           to-page="foodpage"
         ></MenuCard>
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard title="Book" icon="book" to-page="bookpage"></MenuCard>
+        <MenuCard title="หนังสือ" icon="book" to-page="bookpage"></MenuCard>
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard title="Member" icon="user-large" to-page="member"></MenuCard>
+        <MenuCard title="สมาชิก" icon="user-large" to-page="member"></MenuCard>
       </div>
     </div>
 
@@ -26,14 +26,14 @@
       <div class="column is-2"></div>
       <div class="column">
         <MenuCard
-          title="Report"
+          title="รายงาน"
           icon="chart-pie"
-          to-page="testchart"
+          to-page="datareport"
         ></MenuCard>
       </div>
       <div class="column is-1"></div>
       <div class="column">
-        <MenuCard title="Setting" icon="gear" to-page="setting"></MenuCard>
+        <MenuCard title="การตั้งค่า" icon="gear" to-page="setting"></MenuCard>
       </div>
       <div class="column is-2"></div>
     </div>

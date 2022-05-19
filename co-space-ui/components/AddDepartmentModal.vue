@@ -15,7 +15,7 @@
         <b-button
           label="เพิ่มแผนก"
           @click="insertDepartment()"
-          type="is-primary"
+          class="is-blue"
         />
       </footer>
     </div>
@@ -80,3 +80,9 @@ export default {
   },
 }
 </script>
+<style scoped>
+.is-blue {
+  background: #70b6c2;
+  color: white;
+}
+</style>

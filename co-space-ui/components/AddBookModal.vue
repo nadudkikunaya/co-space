@@ -29,11 +29,7 @@
       </section>
       <footer class="modal-card-foot is-justify-content-flex-end">
         <b-button label="ยกเลิก" @click="closeModal" />
-        <b-button
-          label="เพิ่มหนังสือ"
-          @click="insertBook()"
-          type="is-primary"
-        />
+        <b-button label="เพิ่มหนังสือ" @click="insertBook()" class="is-blue" />
       </footer>
     </div>
   </form>
@@ -56,7 +52,7 @@ export default {
         book_image: '',
       },
 
-      bookTypeArr: ['พัฒนาตนเอง'],
+      bookTypeArr: ['เบ็ดเตล็ด', 'พัฒนาตนเอง', 'การ์ตูน', 'การศึกษา', 'อาหาร'],
     }
   },
 
@@ -105,3 +101,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.is-blue {
+  background: #70b6c2;
+  color: white;
+}
+</style>

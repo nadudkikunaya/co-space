@@ -6,8 +6,6 @@
         <button type="button" class="delete" @click="closeModal" />
       </header>
       <section class="modal-card-body">
-        {{ data }}
-
         <b-field label="ชื่ออาหาร">
           <b-input v-model="data.food_name"></b-input>
         </b-field>
@@ -28,11 +26,7 @@
       </section>
       <footer class="modal-card-foot is-justify-content-flex-end">
         <b-button label="ยกเลิก" @click="closeModal" />
-        <b-button
-          label="อัพเดทข้อมูล"
-          @click="updateData()"
-          type="is-primary"
-        />
+        <b-button label="อัพเดทข้อมูล" @click="updateData()" class="is-blue" />
       </footer>
     </div>
   </form>
@@ -111,3 +105,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.is-blue {
+  background: #70b6c2;
+  color: white;
+}
+</style>
