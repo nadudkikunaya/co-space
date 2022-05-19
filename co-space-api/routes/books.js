@@ -3,6 +3,7 @@ const router = express.Router();
 const { pool, formatDate, client } = require("../config");
 const mysql = require("mysql2/promise");
 // Get for only id after path
+const { isAuth } = require("./auth/auth-jwt");
 router.get("/books/:id/", async (req, res) => {
   // let {id, name} = req.params;
   let id = req.params.id;

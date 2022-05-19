@@ -28,6 +28,7 @@
 
 export default {
   name: 'DataReport',
+  middleware: ['auth'],
   components: {
     PieMostFavFood: () => import('@/components/PieMostFavFood'),
     MemberRegisterBar: () => import('@/components/MemberRegisterBar'),

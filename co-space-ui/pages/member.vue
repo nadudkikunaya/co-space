@@ -100,6 +100,7 @@
 import { axios } from '@/plugins/axios'
 export default {
   name: 'MemberPage',
+  middleware: ['auth'],
   components: {},
   data() {
     return {

@@ -118,6 +118,7 @@
 import { axios } from '@/plugins/axios'
 export default {
   name: 'SettingDepartMent',
+  middleware: ['auth'],
   components: {
     EditDepartmentModal: () => import('@/components/EditDepartmentModal'),
     AddDepartmentModal: () => import('@/components/AddDepartmentModal'),

@@ -13,7 +13,7 @@
           <b-input v-model="data.staff_username"></b-input>
         </b-field>
         <b-field label="รหัส">
-          <b-input v-model="data.staff_password_hash"></b-input>
+          <b-input></b-input>
         </b-field>
         <b-field label="เพศ">
           <b-select placeholder="เพศ" v-model="data.gender" expanded>

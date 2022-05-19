@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { pool, formatDate, client } = require("../config");
+const { isAuth } = require("./auth/auth-jwt");
 
-router.post("/sale_foods", async (req, res) => {
-  let { selectedList, staff_id, member_id, total, discount } = req.body;
+router.post("/sale_foods", isAuth, async (req, res) => {
+  let { selectedList, member_id, total, discount } = req.body;
+  staff_id = req.user.uid;
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
@@ -37,8 +39,9 @@ router.post("/sale_foods", async (req, res) => {
   }
 });
 
-router.post("/sale_books", async (req, res) => {
+router.post("/sale_books", isAuth, async (req, res) => {
   let { selectedList, staff_id, member_id, total, discount } = req.body;
+  staff_id = req.user.uid;
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {

@@ -42,8 +42,30 @@ export default {
     // https://go.nuxtjs.dev/buefy
     'nuxt-buefy',
     // https://go.nuxtjs.dev/axios
+
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
   ],
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/auth/login',
+            method: 'post',
+            propertyName: 'user.token',
+          },
+          user: { url: '/auth/me', method: 'get', propertyName: 'user' },
+          logout: false,
+        },
+      },
+      // tokenName: 'Authorization'
+    },
+    redirect: {
+      login: '/login',
+      logout: '/login',
+    },
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {

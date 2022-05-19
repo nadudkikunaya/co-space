@@ -8,7 +8,7 @@ async function logger(req, res, next) {
 
 const isAdmin = async (req, res, next) => {
   const [[user]] = await pool.query(
-    "SELECT account_id FROM admin WHERE account_id = ?",
+    "SELECT staff_id FROM staffs WHERE staff_id = ?",
     [req.user.uid]
   );
 
@@ -23,7 +23,7 @@ const isAdmin = async (req, res, next) => {
 
 const isStaff = async (req, res, next) => {
   const [[user]] = await pool.query(
-    "SELECT account_id FROM staff WHERE account_id = ?",
+    "SELECT staff_id FROM staffs WHERE staff_id = ?",
     [req.user.uid]
   );
 

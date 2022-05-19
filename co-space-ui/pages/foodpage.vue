@@ -142,6 +142,7 @@ import { axios } from '@/plugins/axios'
 
 export default {
   name: 'FoodPage',
+  middleware: ['auth'],
   components: {},
   data() {
     return {
@@ -199,7 +200,6 @@ export default {
       const response = await axios.post(`/sale_foods`, {
         selectedList: this.selectedList,
         total: this.realPrice,
-        staff_id: 1,
         member_id: this.memberDetails?.member_id || null,
         discount: this.discount,
       })

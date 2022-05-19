@@ -8,32 +8,34 @@
         <div class="column is-6">
           <div class="card">
             <div class="card-content">
-              <div class="content has-text-centered">
-                <p class="title">ลงชื่อเข้าใช้งาน</p>
-                <div class="columns">
-                  <div class="column is-12">
-                    <b-input
-                      v-model="username"
-                      size="is-medium"
-                      placeholder="ชื่อผู้ใช้"
-                      rounded
-                    ></b-input>
+              <form @submit="login">
+                <div class="content has-text-centered">
+                  <p class="title">ลงชื่อเข้าใช้งาน</p>
+                  <div class="columns">
+                    <div class="column is-12">
+                      <b-input
+                        v-model="username"
+                        size="is-medium"
+                        placeholder="ชื่อผู้ใช้"
+                        rounded
+                      ></b-input>
+                    </div>
                   </div>
-                </div>
-                <div class="columns">
-                  <div class="column is-12">
-                    <b-input
-                      v-model="password"
-                      size="is-medium"
-                      rounded
-                      placeholder="รหัสผ่าน"
-                    ></b-input>
+                  <div class="columns">
+                    <div class="column is-12">
+                      <b-input
+                        v-model="password"
+                        size="is-medium"
+                        rounded
+                        placeholder="รหัสผ่าน"
+                      ></b-input>
+                    </div>
                   </div>
+                  <b-button size="is-medium bg-blue" native-type="submit"
+                    >ลงชื่อเข้าสู่ระบบ</b-button
+                  >
                 </div>
-                <b-button size="is-medium bg-blue" @click="addMember"
-                  >ลงชื่อเข้าสู่ระบบ</b-button
-                >
-              </div>
+              </form>
             </div>
           </div>
         </div>
@@ -42,64 +44,46 @@
   </div>
 </template>
 <script>
-import { axios } from '@/plugins/axios'
 export default {
   name: 'LoginPage',
-  components: {},
+  // middleware: ['isNotLoggedIn'],
   data() {
     return {
       username: '',
       password: '',
     }
   },
-  mounted() {},
+  computed: {},
   methods: {
-    async addVisit() {
-      const response = await axios.post(`/visit`, {
-        memberId: this.memberId,
-      })
-      if (response.data.success) {
-        this.success()
-        this.clear()
-      } else this.danger(response.data.reason)
-    },
-    async addMember() {
-      const arr = this.fullname.split(' ')
-      if (arr.length < 2 || this.phone === '') {
-        this.danger('กรุณาใส่ชื่อและนามสกุล')
-        return
+    async login(e) {
+      e.preventDefault()
+      const payload = {
+        username: this.username,
+        password: this.password,
       }
-      this.firstname = arr[0]
-      this.lastname = arr[1]
-      const response = await axios.post(`/member`, {
-        member_firstname: this.firstname,
-        member_lastname: this.lastname,
-        gender: this.gender,
-        phone: this.phone,
-      })
-      if (response.data.success) {
+      try {
+        await this.$auth.loginWith('local', {
+          data: payload,
+        })
+        this.$router.push('/')
+
         this.success()
-        this.clear()
-      } else this.danger(response.data.reason)
-    },
-    clear() {
-      this.fullname = ''
-      this.firstname = ''
-      this.lastname = ''
-      this.phone = ''
-      this.gender = 'male'
+      } catch (e) {
+        console.log(e)
+        this.$router.push('/login')
+        this.danger()
+      }
     },
     success() {
       this.$buefy.toast.open({
-        message: 'ทำรายการสำเร็จ',
+        message: 'เข้าสู่ระบบสำเร็จ',
         type: 'is-success',
       })
     },
-    danger(reason) {
-      if (reason === null || reason === undefined) reason = ''
+    danger() {
       this.$buefy.toast.open({
         duration: 5000,
-        message: `ทำรายการไม่สำเร็จ ${reason}`,
+        message: `มีข้อผิดพลาด กรุณาลองใหหม่อีกครั้ง`,
         type: 'is-danger',
       })
     },

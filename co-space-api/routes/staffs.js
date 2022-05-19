@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { pool, formatDate, client } = require("../config");
 const mysql = require("mysql2/promise");
+const bcrypt = require("bcrypt");
 // Get for only id after path
 router.get("/staffs/:id/", async (req, res) => {
   // let {id, name} = req.params;
@@ -41,14 +42,14 @@ router.get("/staffs", async (req, res) => {
     searchTerm = "%" + searchTerm.trim() + "%";
     searchTerm = mysql.escape(searchTerm);
     count = `SELECT COUNT(staffs.staff_id) as total FROM staffs WHERE staff_name LIKE ${searchTerm} `;
-    sql = `SELECT * FROM staffs 
+    sql = `SELECT staff_id,staff_name,staff_username,gender,department_id FROM staffs 
            WHERE staff_name LIKE ${searchTerm} 
            ORDER BY staff_id
            LIMIT ${limitStart} , ${perPage}
           `;
   } else {
     count = `SELECT COUNT(staffs.staff_id) as total FROM staffs `;
-    sql = `SELECT * FROM staffs 
+    sql = `SELECT staff_id,staff_name,staff_username,gender,department_id FROM staffs 
     ORDER BY staff_id
     LIMIT ${limitStart} , ${perPage}
    `;
@@ -86,6 +87,7 @@ router.post("/staffs", async (req, res) => {
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
+    staff_password_hash = await bcrypt.hash(staff_password_hash, 5);
     sql = `INSERT INTO staffs (staff_name, staff_username, staff_password_hash , gender, department_id) 
               VALUES ('${staff_name}', '${staff_username}', '${staff_password_hash}', '${gender}' ,'${department_id}')`;
     // sql = `INSERT INTO \`library\`.\`members\` (\`member_firstname\`, \`member_lastname\`, \`gender\`)
@@ -123,6 +125,7 @@ router.put("/staffs", async (req, res) => {
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
+    staff_password_hash = await bcrypt.hash(staff_password_hash, 5);
     sql = `UPDATE \`library\`.\`staffs\`
               SET  staff_name =  ? , 
                    staff_username = ? , 

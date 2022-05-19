@@ -8,6 +8,7 @@ const staffs = require("./staffs");
 const departments = require("./departments");
 const visit = require("./visit");
 const chart = require("./chart");
+const auth = require("./auth");
 
 // testapi
 // const krit = require("./testapi/krit");
@@ -16,6 +17,7 @@ const chart = require("./chart");
 // router.use(chopang);
 
 // production
+router.use(auth);
 router.use(departments);
 router.use(staffs);
 router.use(foods);
@@ -24,4 +26,5 @@ router.use(books);
 router.use(sales);
 router.use(visit);
 router.use(chart);
+
 module.exports = router;

@@ -133,6 +133,7 @@
 import { axios } from '@/plugins/axios'
 export default {
   name: 'SettingStaff',
+  middleware: ['auth'],
   components: {
     EditStaffModal: () => import('@/components/EditStaffModal'),
     AddStaffModal: () => import('@/components/AddStaffModal'),

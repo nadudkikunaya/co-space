@@ -147,6 +147,7 @@
 import { axios } from '@/plugins/axios'
 export default {
   name: 'SettingBook',
+  middleware: ['auth'],
   components: {
     EditBookModal: () => import('@/components/EditBookModal'),
     AddBookModal: () => import('@/components/AddBookModal'),

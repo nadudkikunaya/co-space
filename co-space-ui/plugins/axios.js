@@ -4,24 +4,24 @@ const instance = axios.create({
   baseURL: process.env.BASEURL || 'http://localhost:8080/api',
 })
 
-// const getToken = function () {
-//   if (process.server) {
-//     // nuxt process in server side
-//     return
-//   }
-//   if (window.$nuxt) {
-//     return window.$nuxt.$auth.getToken('local')
-//   }
-// }
+const getToken = function () {
+  if (process.server) {
+    // nuxt process in server side
+    return
+  }
+  if (window.$nuxt) {
+    return window.$nuxt.$auth.getToken('local')
+  }
+}
 
 const CancelToken = axios.CancelToken
 
 instance.interceptors.request.use(
   (config) => {
-    // const token = getToken()
-    // if (token) {
-    //   config.headers.Authorization = token
-    // }
+    const token = getToken()
+    if (token) {
+      config.headers.Authorization = token
+    }
     // if (cancel) {
     //   cancel()
     // }

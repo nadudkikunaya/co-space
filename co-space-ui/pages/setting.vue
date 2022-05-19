@@ -52,6 +52,7 @@
 <script>
 export default {
   name: 'SettingPage',
+  middleware: ['auth'],
   components: {
     MenuCard: () => import('@/components/MenuCard'),
   },

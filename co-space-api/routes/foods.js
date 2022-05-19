@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { pool, formatDate, client } = require("../config");
 const mysql = require("mysql2/promise");
+const { isAuth } = require("./auth/auth-jwt");
 
 router.get("/foodlist", async (req, res) => {
+  console.log(req.user);
   let { type, searchTerm } = req.query;
   const conn = await pool.getConnection();
   await conn.beginTransaction();

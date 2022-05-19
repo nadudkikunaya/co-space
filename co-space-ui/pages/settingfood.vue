@@ -137,6 +137,7 @@
 import { axios } from '@/plugins/axios'
 export default {
   name: 'SettingFood',
+  middleware: ['auth'],
   components: {
     EditFoodModal: () => import('@/components/EditFoodModal'),
     AddFoodModal: () => import('@/components/AddFoodModal'),
