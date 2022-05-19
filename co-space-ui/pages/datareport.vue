@@ -13,6 +13,7 @@
               </b-tabs>
               <PieMostFavFood v-if="selectedTab === 0"></PieMostFavFood>
               <SalesTable v-if="selectedTab === 0"></SalesTable>
+              <MemberVisitBar v-if="selectedTab === 1"></MemberVisitBar>
               <MemberRegisterBar v-if="selectedTab === 2"></MemberRegisterBar>
             </div>
           </div>
@@ -31,6 +32,7 @@ export default {
     PieMostFavFood: () => import('@/components/PieMostFavFood'),
     MemberRegisterBar: () => import('@/components/MemberRegisterBar'),
     SalesTable: () => import('@/components/SalesTable'),
+    MemberVisitBar: () => import('@/components/MemberVisitBar'),
   },
   data() {
     return {

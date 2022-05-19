@@ -3,6 +3,7 @@
     <div class="columns">
       <div class="column"></div>
       <div class="column is-12">
+        <p class="title">การสมัครสมาชิก</p>
         <div class="columns">
           <b-field>
             <a
@@ -145,7 +146,7 @@ export default {
           display: true,
           text:
             'การสมัครสมาชิกวันที่ ' +
-            moment(this.selectedDate).format('DD-MM-YYY'),
+            moment(this.selectedDate).format('DD-MM-YYYY'),
           fontSize: 24,
           fontColor: '#6b7280',
         },
@@ -285,9 +286,9 @@ export default {
       // title
       let range = 'วันที่'
       if (val === 'day')
-        range = 'วันที่ ' + moment(this.selectedDate).format('DD-MM-YYY')
+        range = 'วันที่ ' + moment(this.selectedDate).format('DD-MM-YYYY')
       else if (val === 'month')
-        range = 'เดือนที่ ' + moment(this.selectedMonth).format('MM-YY')
+        range = 'เดือนที่ ' + moment(this.selectedMonth).format('MM-YYYY')
       else if (val === 'year') range = 'ปีที่ ' + this.selectedYear
       const title = {
         display: true,

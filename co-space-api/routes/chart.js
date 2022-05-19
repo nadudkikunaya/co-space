@@ -58,6 +58,55 @@ LIMIT 10 `;
   }
 });
 
+router.get("/visit_chart", async (req, res) => {
+  let { startDate, endDate } = req.query;
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    let labels = [],
+      initData = [];
+    const sql = `SELECT HOUR(v.visit_timestamp) as hr,
+    (
+    SELECT COUNT(*) FROM visit_history w
+    WHERE HOUR(w.visit_timestamp) = hr AND DATE(w.visit_timestamp) BETWEEN '${startDate}' AND '${endDate}'
+    ) as cnt
+     FROM visit_history v
+    WHERE DATE(v.visit_timestamp) BETWEEN '${startDate}' AND '${endDate}'
+    GROUP BY hr
+    ORDER BY hr ASC`;
+
+    for (let i = 0; i <= 23; i++) {
+      labels.push(i);
+      initData.push(0);
+    }
+    const [data] = await conn.query(sql);
+    console.log(data);
+    let qnt = [...initData];
+    for (let i = 0; i < data.length; i++) {
+      qnt[data[i].hr] = data[i].cnt;
+    }
+
+    // let total = qnt.reduce((a, b) => a + b, 0);
+
+    // for (let i = 0; i < qnt.length; i++) {
+    //   let calc = Math.round((qnt[i] * 100) / total);
+    //   qnt[i] = calc;
+    // }
+
+    return res.json({
+      success: true,
+      data: qnt,
+      labels: labels,
+    });
+  } catch (err) {
+    console.log(err);
+    conn.rollback();
+    res.status(400).json(err.toString());
+  } finally {
+    conn.release();
+  }
+});
+
 router.get("/memberregis_chart", async (req, res) => {
   let { type, date, month, year } = req.query;
   const conn = await pool.getConnection();
